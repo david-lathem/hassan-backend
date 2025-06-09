@@ -7,7 +7,7 @@ exports.getCurrentUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getCurrentUserGuilds = catchAsync(async (req, res, next) => {
-  let guilds = await fetchUserGuildsOauth(req.dbUser.accessToken);
+  let guilds = await fetchUserGuildsOauth(req.dbUser.accessToken, req.dbUser.userId);
 
   const ADMIN_BIT = 0x0000000000000008;
 
