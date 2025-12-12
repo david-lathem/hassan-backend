@@ -1,12 +1,10 @@
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, GatewayDispatchEvents, GatewayIntentBits } from "discord.js";
 
 const botClient = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
-botClient.on("clientReady", () => {
-  console.log(`[BOT] Logged in as ${botClient.user.username}`);
-});
+// when destroyed, it does shard reconnect and then shard ready happens
 
 botClient.type = "bot";
 

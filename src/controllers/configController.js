@@ -20,9 +20,6 @@ export const setConfig = async (req, res) => {
   if (!["bot", "user"].includes(tokenType))
     throw new AppError('tokenType must be either "bot" or "user"', 400);
 
-  if (botClient.isReady()) await botClient.destroy();
-  if (userClient.isReady()) await userClient.logout();
-
   let err;
 
   if (tokenType === "bot") err = await botClient.login(token).catch((e) => e);
@@ -30,7 +27,11 @@ export const setConfig = async (req, res) => {
   if (tokenType === "user") err = await userClient.login(token).catch((e) => e);
 
   if (err instanceof Error) {
-    if (err.code === "TOKEN_INVALID" || err.code === "TokenInvalid")
+    if (
+      err.code === "TOKEN_INVALID" ||
+      err.code === "TokenInvalid" ||
+      err.code === "INVALID_INTENTS" // happens when normal bot token used on self bot login
+    )
       throw new AppError("Invalid token", 400);
 
     console.error(err);
