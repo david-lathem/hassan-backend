@@ -1,8 +1,8 @@
 import express from "express";
-import { getConfig, setConfig } from "../controllers/configController.js";
+import { getServers } from "../controllers/serverController.js";
 
 const serverRouter = express.Router();
 
-serverRouter.get("/", getConfig);
+serverRouter.get("/", getServers);
 
 export default serverRouter;

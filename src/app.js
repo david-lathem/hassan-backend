@@ -31,7 +31,9 @@ app.use(express.json());
 
 // 2) Routes
 app.use(`${BASE_URL}/config`, configRouter);
+
 app.use(checkLogin);
+
 app.use(`${BASE_URL}/servers`, serverRouter);
 
 // can use app.all(*) as well but .use() makes more sense since .all works for a specific route say /test but use would work with /test/23 as well
