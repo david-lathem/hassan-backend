@@ -1,5 +1,3 @@
-import botClient from "../discord/botClient.js";
-import userClient from "../discord/userClient.js";
 import { sendResponse } from "../utils/sendResponse.js";
 
 export const getServers = async (req, res) => {
