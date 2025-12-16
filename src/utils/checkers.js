@@ -29,12 +29,10 @@ export const checkLogin = async (req, res, next) => {
 };
 
 export const checkItemType = (req, res, next) => {
-  if (itemTypeArray.includes(req.query.itemType)) return next();
+  if (itemTypeArray.includes(req.body.itemType)) return next();
 
   throw new AppError(
-    `itemType (in query params) must be one of the: ${itemTypeArray.join(
-      ", "
-    )}`,
+    `itemType (in body) must be one of the: ${itemTypeArray.join(", ")}`,
     400
   );
 };

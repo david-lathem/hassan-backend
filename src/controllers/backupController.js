@@ -6,10 +6,10 @@ import { sendResponse } from "../utils/sendResponse.js";
 export const backupItem = async (req, res) => {
   const {
     params: { itemId },
-    query: { itemType: requestItemType },
+    body: { itemType: requestItemType, itemName },
   } = req;
 
-  if (!req.body?.itemName)
+  if (!itemName)
     throw new AppError(
       "Please supply itemName (group, dm, server name) in body",
       400
@@ -20,7 +20,7 @@ export const backupItem = async (req, res) => {
 
     if (!guild) throw new AppError(`${requestItemType} not found`, 404);
 
-    startBackup(requestItemType, req.body.itemName, guild); // no await so it processed in background
+    startBackup(requestItemType, itemName, guild); // no await so it processed in background
   }
 
   if (isDmOrGroup(requestItemType)) {
@@ -31,7 +31,7 @@ export const backupItem = async (req, res) => {
     if (!dm || !(dm.type === "DM" || dm.type === "GROUP_DM"))
       throw new AppError(`${requestItemType} not found`, 404);
 
-    startBackup(requestItemType, req.body.itemName, dm); // no await so it processed in background
+    startBackup(requestItemType, itemName, dm); // no await so it processed in background
   }
 
   sendResponse(req, res, undefined);
