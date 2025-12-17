@@ -141,6 +141,8 @@ async function backupGuild(guild) {
     guildBackup.channels.push(channelBackup);
   }
 
+  await guild.fetch(); // this will throw err if token was revoked or something, causing backup to go errored status and not save
+
   return guildBackup;
 }
 
