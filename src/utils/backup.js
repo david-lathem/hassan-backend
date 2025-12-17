@@ -52,8 +52,6 @@ export const startBackup = async (req, item) => {
 
     const process = ProcessController.getProcess(processId);
 
-    console.log(process);
-
     if (!process) return;
 
     ProcessController.setProcess(processId, {
@@ -80,7 +78,6 @@ async function backupGuild(guild) {
     channels: [],
   };
 
-  throw new Error("ss");
   // Backup roles
   guild.roles.cache.forEach((role) => {
     if (role.managed) return;
