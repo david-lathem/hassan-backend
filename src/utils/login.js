@@ -1,14 +1,16 @@
-import Config from "../models/Config.js";
+import { getConfigDb } from "../database/queries.js";
 import ClientHandler from "../structures/ClientHandler.js";
 import { botType } from "./constants.js";
 
 export const loginBotsOnStartup = async () => {
   try {
-    const normalBotconfig = await Config.findOne({
-      tokenType: botType.NORMAL_BOT,
-    });
+    const configs = getConfigDb.all();
 
-    const userBotconfig = await Config.findOne({ tokenType: botType.SELF_BOT });
+    const normalBotconfig = configs.find(
+      (c) => c.tokenType === botType.NORMAL_BOT
+    );
+
+    const userBotconfig = configs.find((c) => c.tokenType === botType.SELF_BOT);
 
     if (normalBotconfig) await ClientHandler.loginBot(normalBotconfig.token);
 

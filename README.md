@@ -8,4 +8,4 @@ MONGO_URI=mongodb+srv://thisIsDummy@cluster0.hhpyoj3.mongodb.net/?retryWrites=tr
 
 Here's what you need for configuration
 
-Get mongo uri from mongodb atlas and allowed origin be of frontend
+allowed origin be of frontend

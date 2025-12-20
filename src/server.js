@@ -1,12 +1,8 @@
-import mongoose from "mongoose";
+import "./database/tables.js";
 import app from "./app.js";
 import { loginBotsOnStartup } from "./utils/login.js";
 
-const { PORT = 3000, MONGO_URI } = process.env;
-
-await mongoose.connect(MONGO_URI);
-
-console.log("Connected to database");
+const { PORT = 3000 } = process.env;
 
 console.log(`Logging in the bots (if any)`);
 

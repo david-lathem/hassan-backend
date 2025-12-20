@@ -1,4 +1,4 @@
-import Config from "../models/Config.js";
+import { getConfigDb, upsertConfigByTokenType } from "../database/queries.js";
 import ClientHandler from "../structures/ClientHandler.js";
 import AppError from "../utils/appError.js";
 import { isCorrectBotType } from "../utils/checkers.js";
@@ -6,7 +6,7 @@ import { botType } from "../utils/constants.js";
 import { sendResponse } from "../utils/sendResponse.js";
 
 export const getConfig = async (req, res) => {
-  const configs = await Config.find({});
+  const configs = getConfigDb.all();
 
   sendResponse(req, res, configs);
 };
@@ -48,15 +48,7 @@ export const setConfig = async (req, res) => {
     throw new AppError("Something went wrong", 500);
   }
 
-  const existing = await Config.findOne();
+  const config = upsertConfigByTokenType.run({ token, tokenType });
 
-  const config = await Config.findOneAndUpdate(
-    { tokenType },
-    { token, tokenType },
-    { new: true, upsert: true, runValidators: true }
-  );
-
-  const statusCode = existing ? 200 : 201;
-
-  sendResponse(req, res, config, statusCode);
+  sendResponse(req, res, config);
 };

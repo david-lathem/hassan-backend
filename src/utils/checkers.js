@@ -1,4 +1,4 @@
-import Config from "../models/Config.js";
+import { getConfigDb } from "../database/queries.js";
 import ClientHandler from "../structures/ClientHandler.js";
 import AppError from "../utils/appError.js";
 import { botType, botTypeArray, itemType, itemTypeArray } from "./constants.js";
@@ -6,7 +6,9 @@ import { botType, botTypeArray, itemType, itemTypeArray } from "./constants.js";
 export const checkLogin = async (req, res, next) => {
   isCorrectBotType(req);
 
-  const config = await Config.findOne({ tokenType: req.query.tokenType });
+  const configs = getConfigDb.all();
+
+  const config = configs.find((c) => c.tokenType === req.query.tokenType);
 
   if (!config) throw new AppError("You have not set a token yet", 400);
 
