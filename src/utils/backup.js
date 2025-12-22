@@ -211,7 +211,7 @@ async function backupChannel(channel) {
         for (const attachment of message.attachments.values()) {
           ensureAttachmentsDirectoryExists(channel.id);
 
-          await downloadAndSaveFile({
+          const fileExtension = await downloadAndSaveFile({
             fileURL: attachment.url,
             itemId: channel.id,
             isAttachment: true,
