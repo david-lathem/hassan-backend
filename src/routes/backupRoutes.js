@@ -13,6 +13,7 @@ backupRouter.get("/client-settings", dmOnly, sendSavedClientSettings);
 backupRouter.get("/:backupId", sendBackup);
 
 backupRouter.post("/client-settings", dmOnly, backupClientSettings);
+backupRouter.post("/client-settings", dmOnly, backupClientSettings);
 backupRouter.post("/:itemId", checkItemType, backupItem);
 
 export default backupRouter;
