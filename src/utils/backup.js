@@ -122,7 +122,7 @@ async function backupGuild(guild) {
 
   const emojis = await backupEmoji(guild);
 
-  guild.emojis = emojis;
+  guildBackup.emojis = emojis;
 
   for (const channel of channels.values()) {
     // Check if the bot has permission to read messages in this channel
