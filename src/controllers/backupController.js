@@ -94,35 +94,29 @@ export const backupClientSettings = async (req, res) => {
 };
 
 export const backupFriends = async (req, res) => {
-  const friends = client.relationships.friendCache;
+  const client = ClientHandler.getClient(req);
 
-  console.log(friends.size);
+  const friends = [...client.relationships.friendCache.values()];
+
+  console.log(friends);
+  console.log(friends[0]);
 
   const friendsBackup = [];
 
   friends.forEach((friend) => {
+    if (!friend) return;
+
     friendsBackup.push({
       id: friend.id,
       username: friend.username,
-      globalName: friend.discriminator,
-      avatar: friend.displayAvatarURL({ format: "png", dynamic: true }),
+      globalName: friend.globalName,
+      avatar: friend.displayAvatarURL(),
     });
   });
 
-  ensureBackupDirectoryExists();
-  const backupFilePath = path.join(
-    __dirname,
-    "..",
-    "backups",
-    "friends-backup.json"
-  );
-  await fs.writeFile(
-    backupFilePath,
-    JSON.stringify(friendsBackup, null, 2),
-    "utf-8"
-  );
-  console.log(`Friends backup saved to ${backupFilePath}`);
-  res.status(200).json({ message: "Friends backup successful!" });
+  await saveBackup("friends", friendsBackup);
+
+  sendResponse(req, res, friendsBackup);
 };
 
 export const sendSavedClientSettings = async (req, res) => {

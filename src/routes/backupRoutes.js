@@ -2,6 +2,7 @@ import express from "express";
 import { checkItemType, dmOnly } from "../utils/checkers.js";
 import {
   backupClientSettings,
+  backupFriends,
   backupItem,
   sendBackup,
   sendSavedClientSettings,
@@ -12,7 +13,7 @@ const backupRouter = express.Router();
 backupRouter.get("/client-settings", dmOnly, sendSavedClientSettings);
 backupRouter.get("/:backupId", sendBackup);
 
-backupRouter.post("/friends", dmOnly, backupClientSettings);
+backupRouter.post("/friends", dmOnly, backupFriends);
 backupRouter.post("/client-settings", dmOnly, backupClientSettings);
 backupRouter.post("/:itemId", checkItemType, backupItem);
 
