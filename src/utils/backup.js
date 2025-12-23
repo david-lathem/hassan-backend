@@ -26,6 +26,7 @@ export const backupGuild = async (guild) => {
   // Backup roles
   guild.roles.cache.forEach((role) => {
     if (role.managed) return;
+    if (role.name === "@everyone") return;
     guildBackup.roles.push({
       id: role.id,
       name: role.name,

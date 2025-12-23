@@ -1,5 +1,4 @@
 import ClientHandler from "../structures/ClientHandler.js";
-import { ChannelTypes } from "./constants.js";
 import { getAttachment, getAvatar } from "./file.js";
 
 export const restoreGuild = async (req, backupData, guildId) => {
@@ -11,26 +10,38 @@ export const restoreGuild = async (req, backupData, guildId) => {
 
   await clearServer(guild);
 
-  // await guild.setName(backupData.name);
+  await guild.setName(backupData.name);
 
-  // const iconBuffer = getAvatar(backupData.id);
+  const iconBuffer = getAvatar(backupData.id);
 
-  // if (iconBuffer) await guild.setIcon(iconBuffer);
+  if (iconBuffer) await guild.setIcon(iconBuffer);
 
-  // for (const roleBackup of backupData.roles) {
-  //   try {
-  //     await guild.roles.create({
-  //       name: roleBackup.name,
-  //       color: roleBackup.color,
-  //       permissions: BigInt(roleBackup.permissions),
-  //       hoist: roleBackup.hoist,
-  //       mentionable: roleBackup.mentionable,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  for (const roleBackup of backupData.roles) {
+    try {
+      await guild.roles.create({
+        name: roleBackup.name,
+        color: roleBackup.color,
+        permissions: BigInt(roleBackup.permissions),
+        hoist: roleBackup.hoist,
+        mentionable: roleBackup.mentionable,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
+  for (const emoji of backupData.emojis) {
+    try {
+      await guild.emojis.create(
+        getAttachment(backupData.id, emoji.id, emoji.extension),
+        emoji.name
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return;
   // Restore categories
   const categoryMap = new Map(); // Map old category IDs to new ones
 
