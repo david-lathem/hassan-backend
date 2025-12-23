@@ -1,8 +1,9 @@
 import express from "express";
-import { getAllData } from "../controllers/dataController.js";
+import { getAllData, getGuildChannels } from "../controllers/dataController.js";
 
 const dataRouter = express.Router();
 
 dataRouter.get("/", getAllData);
+dataRouter.get("/:guildId", getGuildChannels);
 
 export default dataRouter;

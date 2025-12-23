@@ -1,4 +1,5 @@
 import ClientHandler from "../structures/ClientHandler.js";
+import AppError from "../utils/appError.js";
 import { itemType } from "../utils/constants.js";
 import { getAllBackups } from "../utils/file.js";
 import { sendResponse } from "../utils/sendResponse.js";
@@ -81,4 +82,17 @@ export const getAllData = async (req, res) => {
   }
 
   sendResponse(req, res, { guilds, dms, groupDms });
+};
+
+export const getGuildChannels = async (req, res) => {
+  const guild = ClientHandler.getClient(req).guilds.cache.get(
+    req.params.guildId
+  );
+
+  if (!guild) throw new AppError("Guild not found", 404);
+
+  const channels = [
+    ...guild.channels.cache.filter((c) => c.type === "GUILD_TEXT").values(),
+  ];
+  sendResponse(req, res, channels);
 };
