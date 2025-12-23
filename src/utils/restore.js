@@ -41,7 +41,6 @@ export const restoreGuild = async (req, backupData, guildId) => {
     }
   }
 
-  return;
   // Restore categories
   const categoryMap = new Map(); // Map old category IDs to new ones
 
