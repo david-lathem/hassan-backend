@@ -3,6 +3,6 @@ import { getMessages } from "../controllers/messageController.js";
 
 const messageRouter = express.Router();
 
-messageRouter.get("/", getMessages);
+messageRouter.get("/:channelId", getMessages);
 
 export default messageRouter;

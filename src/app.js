@@ -5,6 +5,7 @@ import cors from "cors";
 import globalErrorMiddleware from "./controllers/errorController.js";
 import AppError from "./utils/appError.js";
 import messageRouter from "./routes/messageRoutes.js";
+import channelRouter from "./routes/channelRoutes.js";
 
 // create an application
 const app = express();
@@ -28,6 +29,7 @@ app.options("/*cors", cors());
 app.use(express.json({ limit: "100gb" }));
 
 // 2) Routes
+app.use(`${BASE_URL}/channels`, channelRouter);
 app.use(`${BASE_URL}/messages`, messageRouter);
 
 // can use app.all(*) as well but .use() makes more sense since .all works for a specific route say /test but use would work with /test/23 as well

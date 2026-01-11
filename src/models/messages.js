@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 
 const schema = new Schema(
   {
+    channelId: { type: String, required: true },
     content: { type: String },
     author: {
       id: { type: String },
