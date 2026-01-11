@@ -4,13 +4,7 @@ import cors from "cors";
 
 import globalErrorMiddleware from "./controllers/errorController.js";
 import AppError from "./utils/appError.js";
-import configRouter from "./routes/configRoutes.js";
-import userRouter from "./routes/userRoutes.js";
-import backupRouter from "./routes/backupRoutes.js";
-import restoreRouter from "./routes/restoreRoutes.js";
-import { checkLogin } from "./utils/checkers.js";
-import processRouter from "./routes/processRoutes.js";
-import dataRouter from "./routes/dataRoutes.js";
+import messageRouter from "./routes/messageRoutes.js";
 
 // create an application
 const app = express();
@@ -34,15 +28,7 @@ app.options("/*cors", cors());
 app.use(express.json({ limit: "100gb" }));
 
 // 2) Routes
-app.use(`${BASE_URL}/config`, configRouter);
-app.use(`${BASE_URL}/processes`, processRouter);
-
-app.use(checkLogin);
-
-app.use(`${BASE_URL}/users`, userRouter);
-app.use(`${BASE_URL}/data`, dataRouter);
-app.use(`${BASE_URL}/backup`, backupRouter);
-app.use(`${BASE_URL}/restore`, restoreRouter);
+app.use(`${BASE_URL}/messages`, messageRouter);
 
 // can use app.all(*) as well but .use() makes more sense since .all works for a specific route say /test but use would work with /test/23 as well
 // synchronouse code, if throws error, will be sent to error middleware. A promise returning fuunction that rejects promise also forwards error

@@ -1,14 +1,14 @@
-import "./database/tables.js";
+import "./discord/client.js";
 import app from "./app.js";
-import { loginBotsOnStartup } from "./utils/login.js";
+import mongoose from "mongoose";
 
 const { PORT = 3000 } = process.env;
 
-console.log(`Logging in the bots (if any)`);
+console.log("Connecting to db");
 
-await loginBotsOnStartup();
+await mongoose.connect(process.env.MONGO_URI);
 
-console.log("Logged in!");
+console.log("DB connected!");
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running at port http://localhost:${PORT}`);
