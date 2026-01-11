@@ -14,7 +14,13 @@ client.on("messageCreate", async (message) => {
   try {
     if (!CHANNEL_IDS.includes(message.channelId)) return;
 
-    await Messages.create(message);
+    const { content, embeds, attachments, author } = message;
+    await Messages.create({
+      content,
+      attachments: [...attachments.values()],
+      embeds,
+      author: { avatar: author.displayAvatarURL(), username: author.username, id: author.id },
+    });
 
     wss.clients.forEach(function each(client) {
       if (client.readyState !== WebSocket.OPEN) return;
