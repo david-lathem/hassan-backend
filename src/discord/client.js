@@ -23,7 +23,7 @@ client.on("messageCreate", async (message) => {
 
     await webhook.send(data);
 
-    await Messages.create({
+    const f = await Messages.create({
       channelId: channel.id,
       content,
       attachments: [...attachments.values()],
@@ -38,7 +38,7 @@ client.on("messageCreate", async (message) => {
     wss.clients.forEach(function each(client) {
       if (client.readyState !== WebSocket.OPEN) return;
 
-      client.send(JSON.stringify(message));
+      client.send(JSON.stringify(f));
     });
   } catch (error) {
     console.error(error);
