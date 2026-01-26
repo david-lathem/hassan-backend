@@ -8,3 +8,4 @@ attachments/*
 avatars/*
 !avatars/.gitkeep
 database.db
+config.json

@@ -12,7 +12,7 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
-    "discord.js-selfbot-v13": "^3.7.1",
+    "discord.js-selfbot-v13": "^3.6.1",
     "express": "^5.2.1",
     "mongoose": "^9.1.2",
     "morgan": "^1.10.1",
