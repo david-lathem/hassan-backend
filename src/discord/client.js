@@ -52,6 +52,17 @@ client.on("messageCreate", async (message) => {
     const { content, embeds, attachments, channel } = message;
 
     const configData = FORWARD_CHANNEL_DATA[channel.id];
+
+    if (configData.alternate) {
+      const data = { content, files: [...attachments.values()], embeds };
+
+      const webhook = new WebhookClient({
+        url: configData.alternate,
+      });
+
+      await webhook.send(data);
+    }
+
     if (configData.tc) {
       embeds.forEach((e) => {
         e.title?.replace("TC", "");
