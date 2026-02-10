@@ -64,10 +64,17 @@ client.on("messageCreate", async (message) => {
     }
 
     if (configData.tc) {
+      if (
+        embeds[0] &&
+        !embeds[0].title?.includes("TC") &&
+        !embeds[0].description?.includes("TC")
+      ) {
+        return;
+      }
       embeds.forEach((e) => {
-        e.title?.replace("TC", "");
-        e.description?.replace("TC", "");
-        e.footer?.text?.replace("TC", "");
+        if (e.title) e.title = e.title.replace(/TC/g, "");
+        if (e.description) e.description = e.description.replace(/TC/g, "");
+        if (e.footer?.text) e.footer.text = e.footer.text.replace(/TC/g, "");
       });
     }
 
