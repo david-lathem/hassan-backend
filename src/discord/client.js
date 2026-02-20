@@ -127,7 +127,7 @@ client.on("messageCreate", async (message) => {
 
     const data = {
       content,
-      files: remove_files ? [] : [...attachments.values()],
+      files: configData.remove_files ? [] : [...attachments.values()],
       embeds,
     };
 
