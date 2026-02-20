@@ -66,7 +66,7 @@ client.on("messageCreate", async (message) => {
 
     console.log(message.content);
 
-    let content = message.content ?? "No content";
+    let content = message.content || "No content";
 
     content = content.replace(/<@&\d+>/g, "");
 
