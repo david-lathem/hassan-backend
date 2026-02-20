@@ -2,7 +2,7 @@ import { Client, WebhookClient } from "discord.js-selfbot-v13";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
-
+import Twilio from "twilio";
 import {
   FORWARD_CHANNEL_DATA,
   FOWARD_CHANNEL_IDS,
@@ -17,6 +17,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const client = new Client();
+const twilioClient = new Twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN,
+);
 
 client.on("ready", async () => {
   console.log(`${client.user.username} is ready!`);
@@ -144,6 +148,26 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   try {
+    if (message.channel.id === "1474451362975842467") {
+      console.log("message in sms channel");
+
+      const numbers = ["+19175170366"];
+
+      for (const number of numbers) {
+        try {
+          const msg = await twilioClient.messages.create({
+            body: message.content,
+            from: "+18557257809",
+            to: number,
+          });
+
+          console.log("Sent to:", number, msg.sid);
+          console.log(msg);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
     const prefix = process.env.COMMAND_PREFIX;
 
     const { content } = message;
