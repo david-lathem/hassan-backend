@@ -49,9 +49,26 @@ client.on("messageCreate", async (message) => {
   try {
     if (!FOWARD_CHANNEL_IDS.includes(message.channelId)) return;
 
-    const { content, embeds, attachments, channel } = message;
+    const { embeds, attachments, channel } = message;
+
+    let content = message.content ?? "";
+
+    content = content.replace(/<@&\d+>/g, "");
 
     const configData = FORWARD_CHANNEL_DATA[channel.id];
+
+    if (configData.remove_here) content = content.replaceAll("@here", "");
+
+    if (configData.remove_everyone)
+      content = content.replaceAll("@everyone", "");
+
+    if (configData.remove_links)
+      content = content.replace(/https?:\/\/\S+/gi, "");
+
+    embeds.forEach((e) => {
+      if (e.footer?.text) e.footer.text = "";
+      if (e.footer?.iconURL) e.footer.iconURL = null;
+    });
 
     if (configData.alternate) {
       const data = { content, files: [...attachments.values()], embeds };
@@ -74,7 +91,6 @@ client.on("messageCreate", async (message) => {
       embeds.forEach((e) => {
         if (e.title) e.title = e.title.replace(/TC/g, "");
         if (e.description) e.description = e.description.replace(/TC/g, "");
-        if (e.footer?.text) e.footer.text = e.footer.text.replace(/TC/g, "");
       });
     }
 
@@ -94,7 +110,11 @@ client.on("messageCreate", async (message) => {
         return;
     }
 
-    const data = { content, files: [...attachments.values()], embeds };
+    const data = {
+      content,
+      files: remove_files ? [] : [...attachments.values()],
+      embeds,
+    };
 
     const webhook = new WebhookClient({
       url: configData.WEBHOOK_URL,
