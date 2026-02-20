@@ -1,4 +1,8 @@
 import { Client, WebhookClient } from "discord.js-selfbot-v13";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
+
 import {
   FORWARD_CHANNEL_DATA,
   FOWARD_CHANNEL_IDS,
@@ -8,6 +12,9 @@ import Messages from "../models/messages.js";
 import wss from "../websocket/index.js";
 import { WebSocket } from "ws";
 import { parseTradeMessage } from "../utils/parse.js";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const client = new Client();
 
@@ -51,11 +58,19 @@ client.on("messageCreate", async (message) => {
 
     const { embeds, attachments, channel } = message;
 
+    const nowEST = dayjs().tz("America/New_York");
+
+    const isAfterSunday9AM =
+      nowEST.day() === 0 && // 0 = Sunday
+      nowEST.hour() >= 9;
+
     let content = message.content ?? "";
 
     content = content.replace(/<@&\d+>/g, "");
 
     const configData = FORWARD_CHANNEL_DATA[channel.id];
+
+    if (!isAfterSunday9AM && configData.time) return;
 
     if (configData.remove_here) content = content.replaceAll("@here", "");
 
