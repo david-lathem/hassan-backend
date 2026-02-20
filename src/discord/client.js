@@ -61,10 +61,9 @@ client.on("messageCreate", async (message) => {
     const nowEST = dayjs().tz("America/New_York");
 
     const isAfterSunday9AM =
-      nowEST.day() === 0 && // 0 = Sunday
-      nowEST.hour() >= 9;
-
-    console.log(message.content);
+      nowEST.day() === 0 && // Sunday
+      nowEST.hour() >= 9 && // After 9:00 AM
+      nowEST.hour() <= 23; // Before 11:59 PM
 
     let content = message.content || "** **";
 
@@ -132,8 +131,6 @@ client.on("messageCreate", async (message) => {
       files: configData.remove_files ? [] : [...attachments.values()],
       embeds,
     };
-
-    console.log(content);
 
     const webhook = new WebhookClient({
       url: configData.WEBHOOK_URL,
