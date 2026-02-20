@@ -64,6 +64,8 @@ client.on("messageCreate", async (message) => {
       nowEST.day() === 0 && // 0 = Sunday
       nowEST.hour() >= 9;
 
+    console.log(message.content);
+
     let content = message.content ?? "** **";
 
     content = content.replace(/<@&\d+>/g, "");
