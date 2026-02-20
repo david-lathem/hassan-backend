@@ -131,6 +131,8 @@ client.on("messageCreate", async (message) => {
       embeds,
     };
 
+    console.log(content);
+
     const webhook = new WebhookClient({
       url: configData.WEBHOOK_URL,
     });
