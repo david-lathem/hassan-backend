@@ -102,8 +102,8 @@ client.on("messageCreate", async (message) => {
 
     if (configData.tc)
       if (
-        !embeds[0].title?.includes("TC") &&
-        !embeds[0].description?.includes("TC")
+        !embeds[0]?.title?.includes("TC") &&
+        !embeds[0]?.description?.includes("TC")
       )
         return;
 
