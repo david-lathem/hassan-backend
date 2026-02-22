@@ -6,7 +6,6 @@ import Twilio from "twilio";
 import {
   FORWARD_CHANNEL_DATA,
   FOWARD_CHANNEL_IDS,
-  WEB_CHANNEL_IDS,
 } from "../utils/constants.js";
 import Messages from "../models/messages.js";
 import wss from "../websocket/index.js";
