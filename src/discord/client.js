@@ -67,8 +67,6 @@ client.on("messageCreate", async (message) => {
     embeds.forEach((e) => {
       if (e.footer?.text) e.footer.text = "";
       if (e.footer?.iconURL) e.footer.iconURL = null;
-      if (e.title) e.title = e.title.replace(/TC/g, "");
-      if (e.description) e.description = e.description.replace(/TC/g, "");
     });
 
     if (configData.remove_here) content = content.replaceAll("@here", "");
@@ -100,12 +98,17 @@ client.on("messageCreate", async (message) => {
       });
     }
 
-    if (configData.tc)
+    if (configData.tc) {
       if (
         !embeds[0]?.title?.includes("TC") &&
         !embeds[0]?.description?.includes("TC")
       )
         return;
+      embeds.forEach((e) => {
+        if (e.title) e.title = e.title.replace(/TC/g, "");
+        if (e.description) e.description = e.description.replace(/TC/g, "");
+      });
+    }
 
     if (configData.discord) {
       const data = {
