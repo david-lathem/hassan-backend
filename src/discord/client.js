@@ -82,7 +82,7 @@ client.on("messageCreate", async (message) => {
     if (configData.alternate) {
       const f = await Messages.create({
         channelId: channel.id,
-        tc: true,
+        tc: false,
         content,
         attachments: [...attachments.values()],
         embeds,
