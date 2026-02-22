@@ -1,6 +1,5 @@
 import config from "./../../config.json" with { type: "json" };
 
-export const WEB_CHANNEL_IDS = process.env.WEB_CHANNEL_IDS.split(",");
 export const FOWARD_CHANNEL_IDS = Object.keys(config);
 export const FORWARD_CHANNEL_DATA = config;
 
