@@ -28,16 +28,106 @@ client.on("ready", async () => {
 
 client.on("messageCreate", async (message) => {
   try {
-    if (!WEB_CHANNEL_IDS.includes(message.channelId)) return;
+    if (!FOWARD_CHANNEL_IDS.includes(message.channelId)) return;
 
-    const { content, embeds, attachments, author, channel } = message;
+    const { embeds, attachments, author, channel } = message;
+    let content = message.content || "** **";
 
-    // const data = { content, files: [...attachments.values()], embeds };
+    const configData = FORWARD_CHANNEL_DATA[channel.id];
+
+    // --------------------- Checks ---------------------
+    const nowEST = dayjs().tz("America/New_York");
+
+    const isAfterSunday9AM =
+      nowEST.day() === 0 && // Sunday
+      nowEST.hour() >= 9 && // After 9:00 AM
+      nowEST.hour() <= 23; // Before 11:59 PM
+
+    if (configData.time && !isAfterSunday9AM) return;
+
+    if (
+      configData.excludes?.some((word) =>
+        content.toLowerCase().includes(word.toLowerCase()),
+      )
+    )
+      return;
+
+    if (configData.includes?.length) {
+      if (
+        !configData.includes.some((word) =>
+          content.toLowerCase().includes(word.toLowerCase()),
+        )
+      )
+        return;
+    }
+
+    // -------------- Manipulation ------------------
+
+    content = content.replace(/<@&\d+>/g, "");
+
+    embeds.forEach((e) => {
+      if (e.footer?.text) e.footer.text = "";
+      if (e.footer?.iconURL) e.footer.iconURL = null;
+      if (e.title) e.title = e.title.replace(/TC/g, "");
+      if (e.description) e.description = e.description.replace(/TC/g, "");
+    });
+
+    if (configData.remove_here) content = content.replaceAll("@here", "");
+
+    if (configData.remove_everyone)
+      content = content.replaceAll("@everyone", "");
+
+    if (configData.remove_links)
+      content = content.replace(/https?:\/\/\S+/gi, "");
+
+    if (configData.alternate) {
+      const f = await Messages.create({
+        channelId: channel.id,
+        tc: true,
+        content,
+        attachments: [...attachments.values()],
+        embeds,
+        author: {
+          avatar: author.displayAvatarURL(),
+          username: author.username,
+          id: author.id,
+        },
+      });
+
+      wss.clients.forEach(function each(client) {
+        if (client.readyState !== WebSocket.OPEN) return;
+
+        client.send(JSON.stringify(f));
+      });
+    }
+
+    if (configData.tc)
+      if (
+        embeds[0] &&
+        !embeds[0].title?.includes("TC") &&
+        !embeds[0].description?.includes("TC")
+      )
+        return;
+
+    if (configData.discord) {
+      const data = {
+        content,
+        files: [...attachments.values()],
+        embeds,
+      };
+
+      const webhook = new WebhookClient({
+        url: configData.WEBHOOK_URL,
+      });
+
+      return await webhook.send(data);
+    }
 
     const f = await Messages.create({
       channelId: channel.id,
+      tc: configData.tc,
       content,
-      attachments: [...attachments.values()],
+      attachments: configData.remove_files ? [] : [...attachments.values()],
       embeds,
       author: {
         avatar: author.displayAvatarURL(),
@@ -58,96 +148,6 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   try {
-    if (!FOWARD_CHANNEL_IDS.includes(message.channelId)) return;
-
-    const { embeds, attachments, channel } = message;
-
-    const nowEST = dayjs().tz("America/New_York");
-
-    const isAfterSunday9AM =
-      nowEST.day() === 0 && // Sunday
-      nowEST.hour() >= 9 && // After 9:00 AM
-      nowEST.hour() <= 23; // Before 11:59 PM
-
-    let content = message.content || "** **";
-
-    content = content.replace(/<@&\d+>/g, "");
-
-    const configData = FORWARD_CHANNEL_DATA[channel.id];
-
-    if (!isAfterSunday9AM && configData.time) return;
-
-    if (configData.remove_here) content = content.replaceAll("@here", "");
-
-    if (configData.remove_everyone)
-      content = content.replaceAll("@everyone", "");
-
-    if (configData.remove_links)
-      content = content.replace(/https?:\/\/\S+/gi, "");
-
-    embeds.forEach((e) => {
-      if (e.footer?.text) e.footer.text = "";
-      if (e.footer?.iconURL) e.footer.iconURL = null;
-    });
-
-    if (configData.alternate) {
-      const data = { content, files: [...attachments.values()], embeds };
-
-      const webhook = new WebhookClient({
-        url: configData.alternate,
-      });
-
-      await webhook.send(data);
-    }
-
-    if (configData.tc) {
-      if (
-        embeds[0] &&
-        !embeds[0].title?.includes("TC") &&
-        !embeds[0].description?.includes("TC")
-      ) {
-        return;
-      }
-      embeds.forEach((e) => {
-        if (e.title) e.title = e.title.replace(/TC/g, "");
-        if (e.description) e.description = e.description.replace(/TC/g, "");
-      });
-    }
-
-    if (
-      configData.excludes?.some((word) =>
-        content.toLowerCase().includes(word.toLowerCase()),
-      )
-    )
-      return;
-
-    if (configData.includes?.length) {
-      if (
-        !configData.includes.some((word) =>
-          content.toLowerCase().includes(word.toLowerCase()),
-        )
-      )
-        return;
-    }
-
-    const data = {
-      content,
-      files: configData.remove_files ? [] : [...attachments.values()],
-      embeds,
-    };
-
-    const webhook = new WebhookClient({
-      url: configData.WEBHOOK_URL,
-    });
-
-    await webhook.send(data);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-client.on("messageCreate", async (message) => {
-  try {
     if (message.channel.id === "1474451362975842467") {
       console.log("message in sms channel");
 
@@ -155,7 +155,7 @@ client.on("messageCreate", async (message) => {
 
       for (const number of numbers) {
         try {
-          const msg = await twilioClient.messages.create({
+          const msg = await client.messages.create({
             body: message.content,
             from: "+18557257809",
             to: number,

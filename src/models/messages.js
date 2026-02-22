@@ -4,6 +4,7 @@ const schema = new Schema(
   {
     channelId: { type: String, required: true },
     content: { type: String },
+    tc: { type: Boolean },
     author: {
       id: { type: String },
       username: { type: String, required: true },
@@ -14,7 +15,7 @@ const schema = new Schema(
 
     attachments: { type: [], required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Messages = model("messages", schema);
