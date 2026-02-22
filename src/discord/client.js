@@ -30,7 +30,7 @@ client.on("messageCreate", async (message) => {
     if (!FOWARD_CHANNEL_IDS.includes(message.channelId)) return;
 
     const { embeds, attachments, author, channel } = message;
-    let content = message.content || "** **";
+    let content = message.content;
 
     const configData = FORWARD_CHANNEL_DATA[channel.id];
 
@@ -112,7 +112,7 @@ client.on("messageCreate", async (message) => {
 
     if (configData.discord) {
       const data = {
-        content,
+        content: content || "** **",
         files: [...attachments.values()],
         embeds,
       };
