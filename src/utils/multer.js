@@ -1,7 +1,6 @@
 import multer from "multer";
 import path from "node:path";
-import fs from "node:fs";
-import AppError from "./appError";
+import AppError from "./appError.js";
 
 const __dirname = import.meta.dirname;
 
