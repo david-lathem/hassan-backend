@@ -9,3 +9,5 @@ avatars/*
 !avatars/.gitkeep
 database.db
 config.json
+alerts/*
+!alerts/.gitkeep

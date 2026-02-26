@@ -1,10 +1,12 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import path from "node:path";
 
 import globalErrorMiddleware from "./controllers/errorController.js";
 import AppError from "./utils/appError.js";
 import messageRouter from "./routes/messageRoutes.js";
+import alertRouter from "./routes/alertRoutes.js";
 import channelRouter from "./routes/channelRoutes.js";
 
 // create an application
@@ -22,6 +24,9 @@ const corsOptions = {
   // credentials: true,
 };
 
+const uploadDir = path.join(import.meta.dirname, "..", "alerts");
+app.use("/files", express.static(uploadDir));
+
 app.use(cors(corsOptions));
 app.options("/*cors", cors());
 
@@ -31,6 +36,7 @@ app.use(express.json({ limit: "100gb" }));
 // 2) Routes
 app.use(`${BASE_URL}/channels`, channelRouter);
 app.use(`${BASE_URL}/messages`, messageRouter);
+app.use(`${BASE_URL}/alerts`, alertRouter);
 
 // can use app.all(*) as well but .use() makes more sense since .all works for a specific route say /test but use would work with /test/23 as well
 // synchronouse code, if throws error, will be sent to error middleware. A promise returning fuunction that rejects promise also forwards error
