@@ -4,7 +4,7 @@ import AppError from "./appError.js";
 
 const __dirname = import.meta.dirname;
 
-const uploadDir = path.join(__dirname, "..", "alerts");
+const uploadDir = path.join(__dirname, "..", "..", "alerts");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
