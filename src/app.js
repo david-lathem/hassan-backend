@@ -25,7 +25,7 @@ const corsOptions = {
 };
 
 const uploadDir = path.join(import.meta.dirname, "..", "alerts");
-app.use("/files", express.static(uploadDir));
+app.use(`${BASE_URL}/files`, express.static(uploadDir));
 
 app.use(cors(corsOptions));
 app.options("/*cors", cors());
