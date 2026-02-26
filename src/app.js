@@ -24,11 +24,11 @@ const corsOptions = {
   // credentials: true,
 };
 
-const uploadDir = path.join(import.meta.dirname, "..", "alerts");
-app.use(`${BASE_URL}/files`, express.static(uploadDir));
-
 app.use(cors(corsOptions));
 app.options("/*cors", cors());
+
+const uploadDir = path.join(import.meta.dirname, "..", "alerts");
+app.use(`${BASE_URL}/files`, express.static(uploadDir));
 
 // returns a function acting as middleware to parse application/json bodies
 app.use(express.json({ limit: "100gb" }));
