@@ -1,6 +1,6 @@
 import express from "express";
-import upload from "../utils/multer";
-import { saveAlert } from "../controllers/alertController";
+import upload from "../utils/multer.js";
+import { saveAlert } from "../controllers/alertController.js";
 
 const alertRouter = express.Router();
 
