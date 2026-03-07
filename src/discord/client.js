@@ -37,12 +37,14 @@ client.on("messageCreate", async (message) => {
     // --------------------- Checks ---------------------
     const nowEST = dayjs().tz("America/New_York");
 
-    const isAfterSunday9AM =
+    const isAfterSunday9PM =
       nowEST.day() === 0 && // Sunday
-      nowEST.hour() >= 9 && // After 9:00 AM
+      nowEST.hour() >= 21 && // After 9:00 PM
       nowEST.hour() <= 23; // Before 11:59 PM
 
-    if (configData.time && !isAfterSunday9AM) return;
+    if (configData.time) console.log(isAfterSunday9PM, nowEST);
+
+    if (configData.time && !isAfterSunday9PM) return;
 
     if (
       configData.excludes?.some((word) =>
@@ -121,8 +123,10 @@ client.on("messageCreate", async (message) => {
         url: configData.WEBHOOK_URL,
       });
 
-      return await webhook.send(data);
+      await webhook.send(data);
     }
+
+    if (!configData.website) return;
 
     const f = await Messages.create({
       channelId: channel.id,
@@ -150,7 +154,7 @@ client.on("messageCreate", async (message) => {
 client.on("messageCreate", async (message) => {
   try {
     if (message.channel.id === "1474451362975842467") {
-      console.log("message in sms channel");
+      // console.log("message in sms channel");
 
       const numbers = ["+19175170366"];
 
@@ -162,8 +166,8 @@ client.on("messageCreate", async (message) => {
             to: number,
           });
 
-          console.log("Sent to:", number, msg.sid);
-          console.log(msg);
+          // console.log("Sent to:", number, msg.sid);
+          // console.log(msg);
         } catch (err) {
           console.error(err);
         }
