@@ -34,6 +34,8 @@ client.on("messageCreate", async (message) => {
 
     const configData = FORWARD_CHANNEL_DATA[channel.id];
 
+    console.log(`Message in ${configData.name}`);
+
     // --------------------- Checks ---------------------
     const nowEST = dayjs().tz("America/New_York");
 
