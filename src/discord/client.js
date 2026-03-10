@@ -175,6 +175,9 @@ client.on("messageCreate", async (message) => {
         }
       }
     }
+
+    if (message.guildId !== process.env.GUILD_ID) return;
+
     const prefix = process.env.COMMAND_PREFIX;
 
     const { content } = message;
