@@ -3,7 +3,7 @@ import { sendResponse } from "../utils/sendResponse.js";
 
 export const sendChannelData = async (req, res) => {
   const channelData = Object.entries(FORWARD_CHANNEL_DATA)
-    .filter((d) => !d[1].discord)
+    .filter((d) => !d[1].only_discord)
     .map((d) => {
       return {
         name: d[1].name,
