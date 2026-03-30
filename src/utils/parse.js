@@ -1,3 +1,4 @@
+import messageMap from "../cache/messageMap.js";
 import { COMMAND_MAP } from "./constants.js";
 
 export const parseTradeMessage = (input) => {
@@ -28,4 +29,20 @@ export const parseTradeMessage = (input) => {
   const tickerFinal = ticker ? `${ticker.toUpperCase()} ` : "";
 
   return `**${COMMAND_MAP[commandKey]} ${tickerFinal}${contract.toUpperCase()} at $${price}**`;
+};
+
+export const addReplyIfEXists = (message) => {
+  if (!message.reference) return;
+
+  const { reference, content } = message;
+
+  const data = messageMap.findMessage(reference.messageId);
+
+  if (!data) return;
+
+  const [destChannelId, destMessageId] = data;
+
+  const url = `**[Reply to message](<https://discord.com/channels/${process.env.GUILD_ID_FOR_REPLY}/${destChannelId}/${destMessageId}>)**`;
+
+  message.content = `${url}\n${content}`;
 };

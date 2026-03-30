@@ -10,7 +10,8 @@ import {
 import Messages from "../models/messages.js";
 import wss from "../websocket/index.js";
 import { WebSocket } from "ws";
-import { parseTradeMessage } from "../utils/parse.js";
+import { addReplyIfEXists, parseTradeMessage } from "../utils/parse.js";
+import messageMap from "../cache/messageMap.js";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -115,6 +116,9 @@ client.on("messageCreate", async (message) => {
     }
 
     if (configData.discord) {
+      if (configData.addReply) addReplyIfEXists(message);
+
+      message.content = `${url}\n${content}`;
       const data = {
         content: content || "** **",
         files: [...attachments.values()],
@@ -125,7 +129,9 @@ client.on("messageCreate", async (message) => {
         url: configData.WEBHOOK_URL,
       });
 
-      await webhook.send(data);
+      const m = await webhook.send(data);
+
+      messageMap.addMessage(message.id, m);
     }
 
     if (!configData.website) return;
