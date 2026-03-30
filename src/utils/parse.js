@@ -32,20 +32,15 @@ export const parseTradeMessage = (input) => {
 };
 
 export const addReplyIfEXists = (configData, message, content) => {
-  console.log("cccc");
-
   if (!configData.addReply) return content;
-  console.log("s");
 
   if (!message.reference) return content;
-  console.log("w");
 
   const { reference } = message;
 
   const data = messageMap.findMessage(reference.messageId);
 
   if (!data) return content;
-  console.log("cc");
 
   const [destChannelId, destMessageId] = data;
 
