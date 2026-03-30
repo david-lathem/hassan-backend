@@ -118,7 +118,6 @@ client.on("messageCreate", async (message) => {
     if (configData.discord) {
       if (configData.addReply) addReplyIfEXists(message);
 
-      message.content = `${url}\n${content}`;
       const data = {
         content: content || "** **",
         files: [...attachments.values()],
