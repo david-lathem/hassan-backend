@@ -31,18 +31,19 @@ export const parseTradeMessage = (input) => {
   return `**${COMMAND_MAP[commandKey]} ${tickerFinal}${contract.toUpperCase()} at $${price}**`;
 };
 
-export const addReplyIfEXists = (message) => {
-  if (!message.reference) return;
+export const addReplyIfEXists = (configData, message, content) => {
+  if (!configData.addReply) return content;
+  if (!message.reference) return content;
 
-  const { reference, content } = message;
+  const { reference } = message;
 
   const data = messageMap.findMessage(reference.messageId);
 
-  if (!data) return;
+  if (!data) return content;
 
   const [destChannelId, destMessageId] = data;
 
   const url = `**[Reply to message](<https://discord.com/channels/${process.env.GUILD_ID_FOR_REPLY}/${destChannelId}/${destMessageId}>)**`;
 
-  message.content = `${url}\n${content}`;
+  return `${url}\n${content}`;
 };
