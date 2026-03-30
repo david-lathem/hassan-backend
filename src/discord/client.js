@@ -116,10 +116,10 @@ client.on("messageCreate", async (message) => {
     }
 
     if (configData.discord) {
-      if (configData.addReply) addReplyIfEXists(message);
+      const newContent = addReplyIfEXists(configData, message, content);
 
       const data = {
-        content: content || "** **",
+        content: newContent || "** **",
         files: [...attachments.values()],
         embeds,
       };
